@@ -5,28 +5,24 @@ cd /var/www/html
 
 echo "==> Configurando ambiente..."
 
-# Gera .env a partir das variáveis de ambiente do Fly.io
-if [ ! -f .env ]; then
-    cp .env.example .env
-fi
-
-# Sobrescreve apenas as variáveis críticas vindas do Fly.io (secrets)
+# Gera .env a partir das variáveis de ambiente do Fly.io (secrets)
 cat > .env <<EOF
 APP_NAME="${APP_NAME:-Agenda}"
 APP_ENV=production
 APP_KEY=${APP_KEY}
 APP_DEBUG=false
-APP_URL=${APP_URL:-http://localhost}
+APP_URL=${APP_URL:-https://agenda-app.fly.dev}
 
 LOG_CHANNEL=stderr
 LOG_LEVEL=error
 
-DB_CONNECTION=mysql
-DB_HOST=${DB_HOST}
-DB_PORT=${DB_PORT:-3306}
-DB_DATABASE=${DB_DATABASE}
-DB_USERNAME=${DB_USERNAME}
+DB_CONNECTION=pgsql
+DB_HOST=${DB_HOST:-db.qgwsayaobbatoqupsgpp.supabase.co}
+DB_PORT=${DB_PORT:-5432}
+DB_DATABASE=${DB_DATABASE:-postgres}
+DB_USERNAME=${DB_USERNAME:-postgres}
 DB_PASSWORD=${DB_PASSWORD}
+DB_SSLMODE=require
 
 SESSION_DRIVER=database
 SESSION_LIFETIME=120
@@ -40,7 +36,7 @@ MAIL_USERNAME=${MAIL_USERNAME}
 MAIL_PASSWORD=${MAIL_PASSWORD}
 MAIL_ENCRYPTION=${MAIL_ENCRYPTION:-tls}
 MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
-MAIL_FROM_NAME="${MAIL_FROM_NAME:-Agenda}"
+MAIL_FROM_NAME="${MAIL_FROM_NAME:-Startup de Bolso}"
 
 JWT_SECRET=${JWT_SECRET}
 JWT_ALGO=${JWT_ALGO:-HS256}
@@ -50,7 +46,7 @@ EOF
 
 echo "==> Limpando caches..."
 php artisan config:clear
-php artisan cache:clear
+php artisan cache:clear 2>/dev/null || true
 
 echo "==> Rodando migrations..."
 php artisan migrate --force

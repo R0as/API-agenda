@@ -43,20 +43,18 @@ RUN apk add --no-cache \
     supervisor \
     curl \
     libpng-dev \
-    libzip-dev \
-    zip \
-    unzip \
+    libpq-dev \
     oniguruma-dev \
     icu-dev \
     && docker-php-ext-install \
         pdo \
-        pdo_mysql \
+        pdo_pgsql \
+        pgsql \
         mbstring \
         exif \
         pcntl \
         bcmath \
         gd \
-        zip \
         intl \
     && docker-php-ext-enable opcache
 

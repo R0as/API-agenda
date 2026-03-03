@@ -1,65 +1,58 @@
-# fly.toml gerado para o projeto Agenda (Laravel 12)
-# Renomeie "agenda-app" para o nome do seu app no Fly.io
+# fly.toml app configuration file generated for agenda-app on 2026-03-03T18:53:14-03:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
-app = "agenda-app"
-primary_region = "gru"  # São Paulo - escolha a região mais próxima de seus usuários
+app = 'agenda-app'
+primary_region = 'gru'
 
 [build]
-  dockerfile = "Dockerfile"
+  dockerfile = 'Dockerfile'
 
 [env]
-  APP_ENV = "production"
-  APP_DEBUG = "false"
-  LOG_CHANNEL = "stderr"
-  PORT = "8080"
+  APP_DEBUG = 'false'
+  APP_ENV = 'production'
+  APP_URL = 'https://agenda-app.fly.dev'
+  LOG_CHANNEL = 'stderr'
+  PORT = '8080'
+  DB_CONNECTION = 'pgsql'
+  DB_HOST = 'db.qgwsayaobbatoqupsgpp.supabase.co'
+  DB_PORT = '5432'
+  DB_DATABASE = 'postgres'
+  DB_USERNAME = 'postgres'
+  DB_SSLMODE = 'require'
 
-# Expõe apenas a porta 8080 (Nginx)
+
 [[services]]
+  protocol = 'tcp'
   internal_port = 8080
-  protocol = "tcp"
 
   [[services.ports]]
-    handlers = ["http"]
     port = 80
+    handlers = ['http']
     force_https = true
 
   [[services.ports]]
-    handlers = ["tls", "http"]
     port = 443
+    handlers = ['tls', 'http']
 
   [services.concurrency]
-    type = "connections"
+    type = 'connections'
     hard_limit = 100
     soft_limit = 80
 
   [[services.tcp_checks]]
-    interval = "15s"
-    timeout = "10s"
+    interval = '15s'
+    timeout = '10s'
 
   [[services.http_checks]]
-    interval = "10s"
-    timeout = "5s"
-    grace_period = "30s"
-    method = "GET"
-    path = "/api/health"
+    interval = '10s'
+    timeout = '5s'
+    grace_period = '30s'
+    method = 'GET'
+    path = '/api/health'
 
-[mounts]
-  # Descomente se precisar de armazenamento persistente (ex: uploads locais)
-  # source = "agenda_storage"
-  # destination = "/var/www/html/storage/app"
-
-# ----------------------------------------------------------------
-# Secrets a configurar via CLI antes do deploy:
-#
-#   fly secrets set \
-#     APP_KEY="base64:..." \
-#     APP_URL="https://agenda-app.fly.dev" \
-#     DB_HOST="..." \
-#     DB_DATABASE="agenda" \
-#     DB_USERNAME="root" \
-#     DB_PASSWORD="..." \
-#     JWT_SECRET="..." \
-#     API_KEY="..." \
-#     MAIL_USERNAME="..." \
-#     MAIL_PASSWORD="..."
-# ----------------------------------------------------------------
+[[vm]]
+  memory = '1gb'
+  cpus = 1
+  memory_mb = 1024
