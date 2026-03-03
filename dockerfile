@@ -17,7 +17,4 @@ ENV LOG_CHANNEL stderr
 # Allow composer to run as root
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
-# Instala as dependências do Composer
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
-
 CMD ["/start.sh"]
