@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\EventController;
+use App\Http\Controllers\Api\AvailabilityController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/password/email', [PasswordResetController::class, 'sendCode']);
@@ -17,6 +18,10 @@ Route::middleware('auth:api')->group(function () {
     
     // Events specific to the authenticated user
     Route::apiResource('events', EventController::class);
+
+    // Availability routes
+    Route::get('/availability/next-days', [AvailabilityController::class, 'nextDays']);
+    Route::get('/availability/{date}', [AvailabilityController::class, 'freeSlotsByDate']);
 
     // Admin routes
     Route::middleware('is_admin')->prefix('admin')->group(function() {
