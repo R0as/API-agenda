@@ -1,0 +1,65 @@
+# fly.toml gerado para o projeto Agenda (Laravel 12)
+# Renomeie "agenda-app" para o nome do seu app no Fly.io
+
+app = "agenda-app"
+primary_region = "gru"  # São Paulo - escolha a região mais próxima de seus usuários
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  APP_ENV = "production"
+  APP_DEBUG = "false"
+  LOG_CHANNEL = "stderr"
+  PORT = "8080"
+
+# Expõe apenas a porta 8080 (Nginx)
+[[services]]
+  internal_port = 8080
+  protocol = "tcp"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+    force_https = true
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 100
+    soft_limit = 80
+
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout = "10s"
+
+  [[services.http_checks]]
+    interval = "10s"
+    timeout = "5s"
+    grace_period = "30s"
+    method = "GET"
+    path = "/api/health"
+
+[mounts]
+  # Descomente se precisar de armazenamento persistente (ex: uploads locais)
+  # source = "agenda_storage"
+  # destination = "/var/www/html/storage/app"
+
+# ----------------------------------------------------------------
+# Secrets a configurar via CLI antes do deploy:
+#
+#   fly secrets set \
+#     APP_KEY="base64:..." \
+#     APP_URL="https://agenda-app.fly.dev" \
+#     DB_HOST="..." \
+#     DB_DATABASE="agenda" \
+#     DB_USERNAME="root" \
+#     DB_PASSWORD="..." \
+#     JWT_SECRET="..." \
+#     API_KEY="..." \
+#     MAIL_USERNAME="..." \
+#     MAIL_PASSWORD="..."
+# ----------------------------------------------------------------
